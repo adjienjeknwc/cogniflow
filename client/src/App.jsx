@@ -92,7 +92,7 @@ export default function App() {
   };
 
   // --- NETWORK ACTION: Post Payload directly to IPv4 address ---
-  // --- NETWORK ACTION: Post Payload safely without homepage alerts ---
+  // --- NETWORK ACTION: Dynamic Local and Production Environment Router ---
   const handleUpload = async (side = null) => {
     let targetFile = side === 'A' ? simFileA : (side === 'B' ? simFileB : file);
 
@@ -106,10 +106,12 @@ export default function App() {
     formData.append('screenshot', targetFile); 
 
     try {
-      // Smart check: Use local address if testing locally, otherwise use production Render
+      // DYNAMIC HOST PARSER: Autodetects local machine paths versus public cloud servers safely
       const dynamicBackendUrl = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
         ? 'http://127.0.0.1:5000'
         : 'https://cogniflow-backend-xtlw.onrender.com';
+
+      console.log("Routing payload analysis pass to:", `${dynamicBackendUrl}/api/upload`);
 
       const response = await fetch(`${dynamicBackendUrl}/api/upload`, {
         method: 'POST',
@@ -123,19 +125,17 @@ export default function App() {
         else if (side === 'B') setSimAnalyticsB(data.analytics);
         else setAnalytics(data.analytics);
       } else {
-        // Only trigger alerts if the server actively rejects the image payload
-        alert(data.error || 'The AI server is currently waking up or rate-limited. Please wait 10 seconds and click analyze again.');
+        alert(data.error || 'The AI server is computing metrics. Please wait 10 seconds and click analyze again.');
       }
     } catch (err) {
-      console.error(err);
-      alert('The AI engine is waking up from its free-tier sleep cycle. Please wait 10 seconds and try your analysis pass again!');
+      console.error("Network Link Handshake Exception Log:", err);
+      alert('The cloud engine is waking up from its free-tier sleep cycle. Please wait 10 seconds and try your analysis pass again!');
     } finally {
       if (side === 'A') setSimLoading(prev => ({ ...prev, A: false }));
       else if (side === 'B') setSimLoading(prev => ({ ...prev, B: false }));
       else setLoading(false);
     }
   };
-  
   // --- CANVAS VISUALIZATION RENDER LAYER ---
   const drawHeatmap = (canvas, imageUrl, attentionPoints, activeFixIdx = null) => {
     if (!canvas || !imageUrl || !attentionPoints) return;
