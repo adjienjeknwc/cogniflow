@@ -14,7 +14,7 @@ app.use(cors({
     origin: [
         'http://localhost:5173', 
         'http://127.0.0.1:5173', 
-        'https://YOUR_PROJECT_NAME.vercel.app' // ◄ ADD YOUR FRESH live Vercel URL here!
+        'https://cogniflow-psi.vercel.app/' // ◄ ADD YOUR FRESH live Vercel URL here!
     ],
     methods: ['GET', 'POST'],
     credentials: true
