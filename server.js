@@ -11,7 +11,11 @@ const PORT = process.env.PORT || 5000;
 const HOST = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true' ? '0.0.0.0' : '127.0.0.1';
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174'],
+    origin: [
+        'http://localhost:5173', 
+        'http://127.0.0.1:5173', 
+        'https://YOUR_PROJECT_NAME.vercel.app' // ◄ ADD YOUR FRESH live Vercel URL here!
+    ],
     methods: ['GET', 'POST'],
     credentials: true
 }));
