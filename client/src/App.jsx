@@ -92,6 +92,7 @@ export default function App() {
   };
 
   // --- NETWORK ACTION: Post Payload directly to IPv4 address ---
+  // --- NETWORK ACTION: Post Payload safely without homepage alerts ---
   const handleUpload = async (side = null) => {
     let targetFile = side === 'A' ? simFileA : (side === 'B' ? simFileB : file);
 
@@ -105,7 +106,12 @@ export default function App() {
     formData.append('screenshot', targetFile); 
 
     try {
-      const response = await fetch(`${BACKEND_URL}/api/upload`, {
+      // Smart check: Use local address if testing locally, otherwise use production Render
+      const dynamicBackendUrl = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
+        ? 'http://127.0.0.1:5000'
+        : 'https://cogniflow-backend-xtlw.onrender.com';
+
+      const response = await fetch(`${dynamicBackendUrl}/api/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -117,18 +123,19 @@ export default function App() {
         else if (side === 'B') setSimAnalyticsB(data.analytics);
         else setAnalytics(data.analytics);
       } else {
-        alert(data.error || 'The server had an issue understanding the image.');
+        // Only trigger alerts if the server actively rejects the image payload
+        alert(data.error || 'The AI server is currently waking up or rate-limited. Please wait 10 seconds and click analyze again.');
       }
     } catch (err) {
       console.error(err);
-      alert('Could not establish connection to the backend server. Please make sure node server.js is running.');
+      alert('The AI engine is waking up from its free-tier sleep cycle. Please wait 10 seconds and try your analysis pass again!');
     } finally {
       if (side === 'A') setSimLoading(prev => ({ ...prev, A: false }));
       else if (side === 'B') setSimLoading(prev => ({ ...prev, B: false }));
       else setLoading(false);
     }
   };
-
+  
   // --- CANVAS VISUALIZATION RENDER LAYER ---
   const drawHeatmap = (canvas, imageUrl, attentionPoints, activeFixIdx = null) => {
     if (!canvas || !imageUrl || !attentionPoints) return;
