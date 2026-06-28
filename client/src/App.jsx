@@ -35,6 +35,10 @@ export default function App() {
   const canvasRefA = useRef(null);
   const canvasRefB = useRef(null);
 
+
+  const BACKEND_URL = 'https://cogniflow-backend-xtlw.onrender.com';
+
+  // --- AUTO-ADVANCE PRELOADER STAGE ---
   // --- AUTO-ADVANCE PRELOADER STAGE ---
   useEffect(() => {
     if (appStage === 'preloader') {
@@ -98,7 +102,7 @@ export default function App() {
     formData.append('screenshot', targetFile); 
 
     try {
-      const response = await fetch('https://cogniflow-backend.onrender.com/api/upload', {
+      const response = await fetch(`${BACKEND_URL}/api/upload`, {
         method: 'POST',
         body: formData,
       });
