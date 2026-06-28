@@ -36,7 +36,10 @@ export default function App() {
   const canvasRefB = useRef(null);
 
 
-  const BACKEND_URL = 'https://cogniflow-backend-xtlw.onrender.com';
+  // Dynamically determine the backend URL based on where the app is hosted
+  const BACKEND_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
+    ? 'http://127.0.0.1:5000'
+    : 'https://cogniflow-backend-xtlw.onrender.com';
 
   // --- AUTO-ADVANCE PRELOADER STAGE ---
   // --- AUTO-ADVANCE PRELOADER STAGE ---
